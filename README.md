@@ -15,7 +15,13 @@ In light of the project’s theme and an attempt to make this more interesting, 
 
 ## Building
 
-This project and is written in go and while a binary can be compiled locally, due to this project's reliance on Redis and to be consistant with deployment, it is recommended to run build it as a container.
+### Prerequisites
+
+Docker is required to deploy this project. Instructions for how to download it can be found [here](https://docs.docker.com/get-started/get-docker/).
+
+### Instructions
+
+This project and is written in go and while a binary can be compiled locally, to be consistant with deployment, it is recommended to run build it as a container.
 
 First, clone the repo and `cd` into it.
 ```sh
