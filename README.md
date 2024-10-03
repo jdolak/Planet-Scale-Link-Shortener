@@ -29,12 +29,13 @@ git clone https://github.com/jdolak/Planet-Scale-Link-Shortener.git
 cd Planet-Scale-Link-Shortener
 ```
 
-Setup your dev environment. This downloads the go modules onto into a `./libs` directory so that when successively build containers we do not need to download new modules every time.
+Setup your dev environment. This downloads the go modules onto into a `./libs` directory so that successive containers builds do not need to download new modules every time. 
+This only needs to be run once.
 ```sh
 make init
 ```
 
-Build and run the container.
+Build and run the container. Run this every time a change is made.
 ```
 make
 ```
