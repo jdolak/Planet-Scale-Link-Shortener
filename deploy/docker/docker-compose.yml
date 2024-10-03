@@ -1,0 +1,29 @@
+version: '3.1'
+
+services: 
+  pspbalsaas-server:
+    image: pspbalsaas-image
+    ports:
+      - 80:80
+    restart: on-failure
+    deploy:
+      resources:    
+        limits:
+          memory: 200MB
+
+  db:
+    image: redis
+    restart: no
+    #ports: 
+    #  - 3306:3306
+    #env_file: ../src/.env
+    volumes:
+      - redisdata:/data
+      - ../configs/redis.conf:/usr/local/etc/redis/redis.conf
+    deploy:
+      resources:    
+        limits:
+          memory: 750MB
+
+volumes:
+  redisdata:
