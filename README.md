@@ -17,7 +17,9 @@ In light of the project’s theme and an attempt to make this more interesting, 
 
 ### Prerequisites
 
-Docker is required to deploy this project. Instructions for how to download it can be found [here](https://docs.docker.com/get-started/get-docker/).
+Docker is required to run this project. Instructions for how to download it can be found [here](https://docs.docker.com/get-started/get-docker/).  
+
+Ansible is required for remote deployment and infrastructure configuration management but not needed for the majority of users. Instructions for ansible can be found [here](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html).
 
 ### Instructions
 
