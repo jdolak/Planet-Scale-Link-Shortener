@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: redis
+  name: pspbalsaas-db-1
   labels:
     app: redis
 spec:
   ports:
-  - port: 80
-    name: web
+  - port: 6379
+    name: db
   clusterIP: None
   selector:
     app: pspbalsaas
@@ -34,8 +34,8 @@ spec:
       - name: pspbalsaas-redis
         image: redis:latest
         ports:
-        - containerPort: 80
-          name: web
+        - containerPort: 6379
+          name: db
 #        volumeMounts:
 #        - name: db
 #          mountPath: /var/lib/redis
