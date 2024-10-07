@@ -10,11 +10,11 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-type link struct {
-	ID    string `json:"id"`
-	url   string `json:"url"`
-	views int    `json:"views"`
-}
+//type link struct {
+//	ID    string `json:"id"`
+//	url   string `json:"url"`
+//	views int    `json:"views"`
+//}
 
 // {ID: "a2", url: "https://www3.nd.edu/~pbui/teaching/cse.40842.fa24/reading01.html", views: 0},
 

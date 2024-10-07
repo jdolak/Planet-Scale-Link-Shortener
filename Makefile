@@ -30,3 +30,6 @@ redis-cli:
 restart: down
 	docker compose -f ./deploy/docker/docker-compose.yml -p pspbalsaas up -d
 
+k8s:
+	kubectl apply -f ./deploy/k8s/
+
