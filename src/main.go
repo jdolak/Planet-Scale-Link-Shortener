@@ -29,8 +29,11 @@ var rdb = redis.NewClient(&redis.Options{
 func main() {
 
 	router := gin.Default()
+	router.LoadHTMLGlob("./src/templates/*")
 	router.GET("/:id", getLink)
+	router.GET("/", home)
 	router.POST("/links", createLink)
+	router.POST("/pastebin", home)
 
 	router.Run("0.0.0.0:80")
 }
@@ -82,4 +85,8 @@ func getLink(c *gin.Context) {
 	//    }
 	//}
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
+}
+
+func home(c *gin.Context) {
+	c.HTML(http.StatusOK, "index.html", gin.H{"title": "Main website"})
 }

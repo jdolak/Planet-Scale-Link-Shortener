@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: pspbalsaas-server
+  name: pspbalsaas-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pspbalsaas-server
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: pspbalsaas-server
+    spec:
+      containers:
+      - image: pspbalsaas-image:latest
+        name: pspbalsaas
+        imagePullPolicy: IfNotPresent
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: pspbalsaas-server
+  name: pspbalsaas-server
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    name: web
+  selector:
+    app: pspbalsaas-server
+  type: NodePort
+status:
+  loadBalancer: {}

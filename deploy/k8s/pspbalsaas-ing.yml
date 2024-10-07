@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pspbalsaas-ingress
+spec:
+  rules:
+  - host: s.jdolak.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: pspbalsaas-server
+            port:
+              name: web
