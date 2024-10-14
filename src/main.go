@@ -16,7 +16,9 @@ import (
 //	views int    `json:"views"`
 //}
 
-// {ID: "a2", url: "https://www3.nd.edu/~pbui/teaching/cse.40842.fa24/reading01.html", views: 0},
+type json_data struct {
+	data string `json:"views"`
+}
 
 var ctx = context.Background()
 
@@ -46,15 +48,6 @@ func url_hash(s string) uint32 {
 
 func createLink(c *gin.Context) {
 
-	//var new_link link
-
-	//if err := c.BindJSON(&new_link); err != nil {
-	//	return
-	//}
-
-	// links = append(links, newLink)
-	// c.IndentedJSON(http.StatusCreated, newLink)
-
 	url := c.Query("url")
 	hashed_url := strconv.Itoa(int(url_hash(url)))
 
@@ -62,7 +55,32 @@ func createLink(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	c.IndentedJSON(http.StatusCreated, "http://s.jdolak.com/"+hashed_url)
+
+	returnURL := "http://" + c.Request.Host + "/" + hashed_url
+
+	c.IndentedJSON(http.StatusCreated, returnURL)
+}
+
+func createPaste(c *gin.Context) {
+
+	var new_data json_data
+
+	if err := c.BindJSON(&new_data); err != nil {
+		return
+	}
+
+	c.IndentedJSON(http.StatusCreated, new_data)
+
+	hashed_url := strconv.Itoa(int(url_hash(new_data.data)))
+
+	err := rdb.Set(ctx, hashed_url, new_data.data, 0).Err()
+	if err != nil {
+		panic(err)
+	}
+
+	returnURL := "http://" + c.Request.Host + "/" + hashed_url
+
+	c.IndentedJSON(http.StatusCreated, returnURL)
 }
 
 func getLink(c *gin.Context) {
@@ -78,13 +96,7 @@ func getLink(c *gin.Context) {
 		c.Redirect(http.StatusMovedPermanently, val)
 	}
 
-	//for _, a := range links {
-	//    if a.ID == id {
-	//		c.Redirect(http.StatusMovedPermanently, a.url)
-	//        return
-	//    }
-	//}
-	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "link not found"})
 }
 
 func home(c *gin.Context) {
