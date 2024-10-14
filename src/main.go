@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"hash/fnv"
 	"net/http"
 	"strconv"
@@ -10,14 +11,19 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-//type link struct {
-//	ID    string `json:"id"`
-//	url   string `json:"url"`
-//	views int    `json:"views"`
-//}
+const (
+	Redirect = iota
+	Paste
+)
+
+type link struct {
+	Link_type int    `json:"type"`
+	Data      string `json:"data"`
+	Views     int    `json:"views"`
+}
 
 type json_data struct {
-	data string `json:"views"`
+	Data string `json:"data"`
 }
 
 var ctx = context.Background()
@@ -35,7 +41,7 @@ func main() {
 	router.GET("/:id", getLink)
 	router.GET("/", home)
 	router.POST("/links", createLink)
-	router.POST("/pastebin", home)
+	router.POST("/paste", createPaste)
 
 	router.Run("0.0.0.0:80")
 }
@@ -51,7 +57,18 @@ func createLink(c *gin.Context) {
 	url := c.Query("url")
 	hashed_url := strconv.Itoa(int(url_hash(url)))
 
-	err := rdb.Set(ctx, hashed_url, url, 0).Err()
+	var new_link link
+
+	new_link.Link_type = Redirect
+	new_link.Data = url
+	new_link.Views = 0
+
+	value, err := json.Marshal(new_link)
+	if err != nil {
+		panic(err)
+	}
+
+	err = rdb.Set(ctx, hashed_url, string(value), 0).Err()
 	if err != nil {
 		panic(err)
 	}
@@ -69,11 +86,20 @@ func createPaste(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, new_data)
+	hashed_url := strconv.Itoa(int(url_hash(new_data.Data)))
 
-	hashed_url := strconv.Itoa(int(url_hash(new_data.data)))
+	var new_link link
 
-	err := rdb.Set(ctx, hashed_url, new_data.data, 0).Err()
+	new_link.Link_type = Paste
+	new_link.Data = new_data.Data
+	new_link.Views = 0
+
+	value, err := json.Marshal(new_link)
+	if err != nil {
+		panic(err)
+	}
+
+	err = rdb.Set(ctx, hashed_url, string(value), 0).Err()
 	if err != nil {
 		panic(err)
 	}
@@ -92,8 +118,21 @@ func getLink(c *gin.Context) {
 		c.JSON(http.StatusNotFound, "")
 	} else if err != nil {
 		panic(err)
-	} else {
-		c.Redirect(http.StatusMovedPermanently, val)
+	}
+	var loaded_link link
+
+	err = json.Unmarshal([]byte(val), &loaded_link)
+	if err != nil {
+		panic(err)
+	}
+
+	switch loaded_link.Link_type {
+	case Redirect:
+		c.Redirect(http.StatusMovedPermanently, loaded_link.Data)
+		return
+	case Paste:
+		c.String(http.StatusOK, loaded_link.Data)
+		return
 	}
 
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "link not found"})
