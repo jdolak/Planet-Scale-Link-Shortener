@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"hash/fnv"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -11,35 +12,41 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
+// ENUM for link types
 const (
 	Redirect = iota
 	Paste
 )
 
+// Struct for storing in the DB
 type link struct {
 	Link_type int    `json:"type"`
 	Data      string `json:"data"`
 	Views     int    `json:"views"`
 }
 
+// Struct for binding with paste POST request
 type json_data struct {
 	Data string `json:"data"`
 }
 
-var ctx = context.Background()
-
+// connection with redis db
 var rdb = redis.NewClient(&redis.Options{
 	Addr:     "pspbalsaas-db-1:6379",
 	Password: "",
 	DB:       0,
 })
 
+var ctx = context.Background()
+
 func main() {
 
 	router := gin.Default()
 	router.LoadHTMLGlob("./src/templates/*")
+
 	router.GET("/:id", getLink)
 	router.GET("/", home)
+
 	router.POST("/links", createLink)
 	router.POST("/paste", createPaste)
 
@@ -65,7 +72,7 @@ func createLink(c *gin.Context) {
 
 	value, err := json.Marshal(new_link)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	err = rdb.Set(ctx, hashed_url, string(value), 0).Err()
@@ -82,8 +89,9 @@ func createPaste(c *gin.Context) {
 
 	var new_data json_data
 
-	if err := c.BindJSON(&new_data); err != nil {
-		return
+	err := c.BindJSON(&new_data)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	hashed_url := strconv.Itoa(int(url_hash(new_data.Data)))
@@ -96,7 +104,7 @@ func createPaste(c *gin.Context) {
 
 	value, err := json.Marshal(new_link)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	err = rdb.Set(ctx, hashed_url, string(value), 0).Err()
@@ -117,13 +125,13 @@ func getLink(c *gin.Context) {
 	if err == redis.Nil {
 		c.JSON(http.StatusNotFound, "")
 	} else if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	var loaded_link link
 
 	err = json.Unmarshal([]byte(val), &loaded_link)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	switch loaded_link.Link_type {
