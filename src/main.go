@@ -113,6 +113,9 @@ func createPaste(c *gin.Context) {
 	new_link.Link_type = Paste
 	new_link.Data = new_data.Data
 	new_link.Views = 0
+    new_link.Ip_Addr = getClientIP(c)
+    new_link.Location_Origin = getGeoInfo(new_link.Ip_Addr)
+    new_link.Expiry_Time = time.Now().Unix() + int64(30)
 
 	value, err := json.Marshal(new_link)
 	if err != nil {
