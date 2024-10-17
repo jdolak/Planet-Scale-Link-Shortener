@@ -56,8 +56,9 @@ func main() {
 	router.POST("/links", createLink)
 	router.POST("/paste", createPaste)
 
-	router.Run("0.0.0.0:80")
     go expiryGR()
+	router.Run("0.0.0.0:80")
+
 }
 
 func url_hash(s string) uint32 {
