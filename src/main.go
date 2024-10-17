@@ -27,7 +27,7 @@ type link struct {
 
 // Struct for binding with paste POST request
 type json_data struct {
-	Data string `json:"data"`
+	Data string `json:"value"`
 }
 
 // connection with redis db
@@ -43,6 +43,7 @@ func main() {
 
 	router := gin.Default()
 	router.LoadHTMLGlob("./src/templates/*")
+	router.StaticFile("/styles.css", "./src/static/styles.css")
 
 	router.GET("/:id", getLink)
 	router.GET("/", home)
@@ -77,7 +78,7 @@ func createLink(c *gin.Context) {
 
 	err = rdb.Set(ctx, hashed_url, string(value), 0).Err()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	returnURL := "http://" + c.Request.Host + "/" + hashed_url
@@ -109,7 +110,7 @@ func createPaste(c *gin.Context) {
 
 	err = rdb.Set(ctx, hashed_url, string(value), 0).Err()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	returnURL := "http://" + c.Request.Host + "/" + hashed_url
