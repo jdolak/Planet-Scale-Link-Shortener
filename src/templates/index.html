@@ -17,6 +17,18 @@
         <script>
             function sendPaste() {
                 var formData = JSON.stringify($("#paste").serializeArray()).slice(1,-1);
+
+               // var file = document.getElementById('file_input').files[0];
+               // if (file) {
+               //     var reader = new FileReader();
+               //     try {
+               //     const content = await readFileAsText(file);
+               //     } catch (err) {
+               //     console.error("Error reading file:", err);
+               // }
+               //     formData = formData + "\n" + reader.result
+               // }
+
                 $.ajax({
                     type: "POST",
                     url: "http://localhost/paste",
@@ -28,7 +40,6 @@
                     dataType: "json",
                     contentType : "application/json"
                 });
-                console.log("bruh")
             }
         </script>
         <section class="upload-section">
