@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My Website</title>
-    <link rel="stylesheet" href="./style.css">
-    <link rel="icon" href="./favicon.ico" type="image/x-icon">
-  </head>
-  <body>
+    <title>Text Upload</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Upload Your Text</h1>
+    </header>
     <main>
-        <form action="/pastebin" method="post">
-            <label for="paste_area">Paste content here:</label><br>
-            <textarea id="paste_area" name="paste_area" rows="5" cols="33"></textarea><br>
-            <input type="submit" value="Submit">
-          </form>  
+        <section class="upload-section">
+            <form action="/pastebin" method="post" enctype="multipart/form-data">
+                <label for="file_input">Choose a text file:</label>
+                <input type="file" id="file_input" name="file_input" accept=".txt"><br>
+                <label for="text_area">Or paste your text here:</label><br>
+                <textarea id="text_area" name="text_area" rows="10" cols="50"></textarea><br>
+                <input type="submit" value="Upload">
+            </form>
+        </section>
     </main>
-  </body>
+    <footer>
+        <p>&copy; 2023 Text Upload Service</p>
+    </footer>
+</body>
 </html>
