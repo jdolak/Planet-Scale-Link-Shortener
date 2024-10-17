@@ -11,12 +11,21 @@
 <body>
     <header>
         <h1>Upload Your Text</h1>
-        <button class="home-button" onclick="location.href='homepage.html'">Go to Homepage</button>
+        <button class="home-button" onclick="location.href='/'">Go to Homepage</button>
     </header>
     <main>
         <script>
             function sendPaste() {
-                var formData = JSON.stringify($("#paste").serializeArray()).slice(1,-1);
+                //var formData = JSON.stringify($("#paste").serializeArray()).slice(1,-1);
+
+                var formObject = {};
+                $("#paste").serializeArray().forEach(function(item) {
+                    formObject[item.name] = item.value;
+                });
+
+                // Convert the object into the desired string format
+                var formData = JSON.stringify(formObject);
+
 
                // var file = document.getElementById('file_input').files[0];
                // if (file) {
@@ -49,6 +58,8 @@
                 <!--<input type="file" id="file_input" name="file_input" accept=".txt"><br>-->
                 <label for="text_area">Paste your text here:</label><br>
                 <textarea id="text_area" name="paste" rows="10" cols="50"></textarea><br>
+                <label for="text_area">Days till expiration (optional):</label><br>
+                <input type="number" id="exp" name="exp" size="3" placeholder="0"><br>
                 <input type="button" value="Upload" onclick="sendPaste()">
             </form>
             <p id="link">

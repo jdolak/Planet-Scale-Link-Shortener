@@ -34,7 +34,8 @@ type link struct {
 
 // Struct for binding with paste POST request
 type json_data struct {
-	Data string `json:"value"`
+	Data string `json:"paste"`
+	Exp  string `json:"exp"`
 }
 
 // connection with redis db
@@ -74,6 +75,7 @@ func url_hash(s string) uint32 {
 func createLink(c *gin.Context) {
 
 	url := c.Query("url")
+
 	hashed_url := strconv.Itoa(int(url_hash(url)))
 
 	var new_link link
@@ -83,7 +85,16 @@ func createLink(c *gin.Context) {
 	new_link.Views = 0
 	new_link.Ip_Addr = getClientIP(c)
 	new_link.Location_Origin = getGeoInfo(new_link.Ip_Addr)
-	new_link.Expiry_Time = time.Now().Unix() + int64(30)
+
+	//	exp, err := strconv.Atoi(c.Query("exp"))
+	//	if err != nil {
+	//		new_link.Expiry_Time = -1
+	//	} else {
+	//		new_link.Expiry_Time = time.Now().Unix() + int64(exp)
+	//	}
+
+	new_link.Expiry_Time = -1
+	//new_link.Expiry_Time = time.Now().Unix() + int64(30)
 
 	value, err := json.Marshal(new_link)
 	if err != nil {
@@ -113,12 +124,19 @@ func createPaste(c *gin.Context) {
 
 	var new_link link
 
+	data_exp, err := strconv.Atoi(new_data.Exp)
+
+	if data_exp == 0 {
+		new_link.Expiry_Time = -1
+	} else {
+		new_link.Expiry_Time = time.Now().Unix() + int64(data_exp)
+	}
+
 	new_link.Link_type = Paste
 	new_link.Data = new_data.Data
 	new_link.Views = 0
 	new_link.Ip_Addr = getClientIP(c)
 	new_link.Location_Origin = getGeoInfo(new_link.Ip_Addr)
-	new_link.Expiry_Time = time.Now().Unix() + int64(30)
 
 	value, err := json.Marshal(new_link)
 	if err != nil {
@@ -141,7 +159,8 @@ func getLink(c *gin.Context) {
 
 	val, err := rdb.Get(ctx, id).Result()
 	if err == redis.Nil {
-		c.JSON(http.StatusNotFound, "")
+		c.String(http.StatusNotFound, "")
+		return
 	} else if err != nil {
 		log.Fatal(err)
 	}
@@ -239,7 +258,7 @@ func expiryGR() {
 				log.Fatal(err)
 			}
 			currTime = time.Now().Unix()
-			if currTime > int64(loaded_link.Expiry_Time) {
+			if currTime > int64(loaded_link.Expiry_Time) && int64(loaded_link.Expiry_Time) != -1 {
 				res, err := rdb.Del(ctx, k).Result()
 				if err != nil {
 					log.Fatal(err)
