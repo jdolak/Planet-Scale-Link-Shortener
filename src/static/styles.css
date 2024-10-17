@@ -45,6 +45,11 @@ main {
     padding: 1em; /* Added padding to prevent content from touching the edges */
 }
 
+.readme-section{
+    margin-left: 4em;
+    margin-right: 4em;
+}
+
 .intro-section, .upload-section, #project-overview {
     background-color: white;
     padding: 1.5em; /* Increased padding for better readability */
