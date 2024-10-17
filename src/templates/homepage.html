@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home - Text Upload Service</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to PSBALSAAS</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Upload Text</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="intro-section">
+            <h2>About Us</h2>
+            <p>Welcome to PSBALSAAS. Here you can easily upload your text files or paste your text directly into our form.</p>
+            <p>Click on the "Upload Text" link above to get started.</p>
+        </section>
+        <section class="readme-section">
+            <h2>Project Overview</h2>
+            <h3>Members</h3>
+            <ul>
+                <li>Jachob Dolak: Infrastructure Engineering</li>
+                <li>Will Erdman: Core Development</li>
+                <li>Bobby Rizzo: Integration Development</li>
+            </ul>
+            <h3>Proposal</h3>
+            <p>We will create a URL shortener and paste bin web service. This will allow users to send API requests to our server to create short and shareable URLs to either a website or text document.</p>
+            <p>This program will be written in Go and make use of Go’s concurrency constructs. It will provide a RESTful API, be hosted on AWS, and source with build instructions will be available on GitHub.</p>
+            <p>In light of the project’s theme and an attempt to make this more interesting, we will also try to make this service extremely scalable, and distributed. This could possibly be multi-cloud, containerized, using Kubernetes, with in-memory databases, with horizontal scaling, and edge computing. (and more buzzwords to come)</p>
+            <h3>Building</h3>
+            <h4>Prerequisites</h4>
+            <p>Docker is required to run this project. Instructions for how to download it can be found <a href="https://docs.docker.com/get-started/get-docker/">here</a>.</p>
+            <p>Ansible is required for remote deployment and infrastructure configuration management but not needed for the majority of users. Instructions for Ansible can be found <a href="https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html">here</a>.</p>
+            <h4>Instructions</h4>
+            <p>This project is written in Go and while a binary can be compiled locally, to be consistent with deployment, it is recommended to run build it as a container.</p>
+            <p>First, clone the repo and <code>cd</code> into it.</p>
+            <pre><code>git clone https://github.com/jdolak/Planet-Scale-Link-Shortener.git
+cd Planet-Scale-Link-Shortener
+</code></pre>
+            <p>Setup your dev environment. This downloads the Go modules into a <code>./libs</code> directory so that successive container builds do not need to download new modules every time. This only needs to be run once.</p>
+            <pre><code>make init
+</code></pre>
+            <p>Build and run the container. Run this every time a change is made.</p>
+            <pre><code>make
+</code></pre>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 pspbalsaas</p>
+    </footer>
+</body>
+</html>    </script>
+</body>
+</html>
