@@ -9,8 +9,8 @@ body {
 }
 
 header {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #f4f4f9;
+    color: #000;
     padding: 1em;
     width: 100%;
     text-align: center;
@@ -32,7 +32,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: white;
+    color: black;
     text-decoration: none;
 }
 
@@ -98,8 +98,8 @@ input[type="submit"]:hover {
 }
 
 footer {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #f4f4f9;
+    color: #000;
     padding: 1em;
     width: 100%;
     text-align: center;
